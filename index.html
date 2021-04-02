@@ -314,7 +314,7 @@
 		
 		 function storeAndGetValue() {
              cl('try to store update');
-             instance2.store(count, (storeError: any, storeData: any) => {
+             instance2.store(count, (storeError, storeData) => {
 		 		cl('Store' + storeError + storeData);
 	 		    if (storeError === null && storeData !== null) {
 					cl('inner store' + storeData);
