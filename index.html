@@ -315,11 +315,10 @@
 		 function storeAndGetValue() {
              cl('try to store update');
              instance2.store(count, (storeError, storeData) => {
-		 		cl('Store' + storeError + storeData);
+		 		cl('TX Hash: ' + storeData);
 	 		    if (storeError === null && storeData !== null) {
-					cl('inner store' + storeData);
-					instance1.retrieve(function (err, data) {
-						cl('try to get contract value');
+					instance2.retrieve(function (err, data) {
+						cl('try to get stored value');
 						cl(data);
 					});
                  }
