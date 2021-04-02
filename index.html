@@ -10,8 +10,40 @@
         }
 
         var transaction = '0xf323ddb5323364a285991075a67b6181f74743001a5caff5c5c5d0bc57936931';
+		
         var contractAddress = '0x60fa213f48cd0d83b54380108ccd03a6993247e0';
+		var contractAddress2 = '0xDD615620ED926bfdC421dAA3554234b5C1cb9DeC'; //kovan
+		
+		
         var abi = [
+			{
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "num",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "store",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+			{
+                "constant": false,
+                "inputs": [],
+                "name": "retrieve",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
             {
                 "constant": true,
                 "inputs": [],
@@ -239,10 +271,12 @@
         var global_keystore;
         var contract = web3.eth.contract(abi);
         var instance1 = contract.at(contractAddress);
+		var instance2 = contract.at(contractAddress2);
         var txAddr = '0x53b607fAE8A1dcE18B658100EF14F5866C06fcd9';
         var accountAddress = '0x09b92365FCb3d3e5D2f05Ce08e673910ee0F2DC9';
 
         var decimals = 18;
+		var count = 1;
 
         function getDecimals() {
             instance1.decimals(function (err, data) {
@@ -252,15 +286,50 @@
             });
         }
 
-        function getBalance() {
+        function getBalance() 
+        {
             instance1.balanceOf.call(accountAddress, function (err, data) {
                 cl('try to get ERC20 balance');
                 var result = data*Math.pow(10, -decimals);
                 cl(result);
             })
         }
+		
+		/*const regReponse = await errCatch2 (
+			await instance.methods
+				.register()
+				.send({ from: account, value: 100000000000000000 })
+		);*/
 
-        function transfer() {
+
+        function store() 
+        {
+            cl('try to store');
+            instance2.store(count, function (err, data) {
+                cl('sent'); // log to the div#log
+                cl(err); // log to the div#log
+                cl(data); // log to the div#log
+            })
+        }
+		
+		 function storeAndGetValue() {
+             cl('try to store update');
+             instance2.store(count, (storeError: any, storeData: any) => {
+		 		cl('Store' + storeError + storeData);
+	 		    if (storeError === null && storeData !== null) {
+					cl('inner store' + storeData);
+					instance1.retrieve(function (err, data) {
+						cl('try to get contract value');
+						cl(data);
+					});
+                 });
+             }
+			 
+			 count++;
+         }
+		
+		function transfer() 
+        {
             cl('try to send compound');
             instance1.transfer(txAddr, 1e16, function (err, data) {
                 cl('sent'); // log to the div#log
@@ -268,16 +337,15 @@
                 cl(data); // log to the div#log
             })
         }
-
+		
 
     </script>
     <h1>Simple Dapp Test</h1>
-    <div><button onClick='getBalance()'>Balance</button></div>
-    <div id="log"></div>
-    <div><button onClick='transfer()'>Transfer</button></div>
-    <div><button onClick='getDecimals()'>Decimals</button></div>
-
-
+        <div><button onClick='getBalance()'>Balance</button></div>
+        <div id="log"></div>
+        <div><button onClick='transfer()'>Transfer</button></div>
+        <div><button onClick='getDecimals()'>Decimals</button></div>
+		<div><button onClick='storeAndGetValue()'>store</button></div>
+	    <div><button onClick='txAndGetBalance()'>Transfer and get balance</button></div>
 </body>
-
 </html>
