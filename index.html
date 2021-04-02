@@ -285,6 +285,14 @@
                 decimals = data;
             });
         }
+		
+		function getValue() {
+            instance2.retrieve(function (err, data) {
+                cl('try to get value');
+                cl(data);
+                decimals = data;
+            });
+        }
 
         function getBalance() 
         {
@@ -343,7 +351,7 @@
         <div><button onClick='getBalance()'>Balance</button></div>
         <div id="log"></div>
         <div><button onClick='transfer()'>Transfer</button></div>
-        <div><button onClick='getDecimals()'>Decimals</button></div>
+        <div><button onClick='getValue()'>Value</button></div>
 		<div><button onClick='storeAndGetValue()'>store</button></div>
 	    <div><button onClick='txAndGetBalance()'>Transfer and get balance</button></div>
 </body>
